@@ -1,7 +1,22 @@
 WITH base AS (
 
-	SELECT *
+	SELECT
+  warehouse_id,
+  warehouse_name,
+  start_time,
+  end_time,
+  credits_used
 	FROM {{ source('snowflake','warehouse_metering_history') }}
+
+  UNION ALL
+
+	SELECT
+  99999,
+  'SNOWPIPE',
+  start_time,
+  end_time,
+  credits_used
+	FROM {{ source('snowflake','pipe_usage_history') }}
 
 )
 
