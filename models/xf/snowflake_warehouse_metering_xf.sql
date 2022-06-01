@@ -2,6 +2,11 @@ WITH base AS (
 
 	SELECT *
 	FROM {{ ref('snowflake_warehouse_metering') }}
+  
+  UNION ALL
+
+	SELECT *
+	FROM {{ ref('snowflake_pipe_metering') }}
 
 ), contract_rates AS (
 
