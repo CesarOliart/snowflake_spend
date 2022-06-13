@@ -56,3 +56,11 @@ models:
       - name: start_time
       - name: end_time
       - name: credits_used
+    - name: snowflake_pipe_metering
+      description: '{{ doc("snowflake_pipe_metering") }}'
+      columns:
+      - name: pipe_id
+      - name: pipe_name
+      - name: start_time
+      - name: end_time
+      - name: credits_used
