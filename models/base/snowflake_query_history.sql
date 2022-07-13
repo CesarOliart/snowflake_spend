@@ -10,6 +10,12 @@ WITH source AS (
 
   SELECT *
   FROM {{ source('snowflake','query_history') }}
+  {% if is_incremental() %}
+
+  -- this filter will only be applied on an incremental run
+  WHERE start_time > (SELECT MAX(query_start_time)  FROM {{ this }})
+
+  {% endif %}
   QUALIFY ROW_NUMBER() OVER (PARTITION BY query_id ORDER BY query_id) = 1
 
 ), renamed AS (
@@ -40,13 +46,6 @@ WITH source AS (
     bytes_scanned                     AS query_bytes_scanned
 
   FROM source
-  {% if is_incremental() %}
-
-  -- this filter will only be applied on an incremental run
-  WHERE query_start_time > (SELECT MAX(query_start_time)  FROM {{ this }})
-
-  {% endif %}
-  
 )
 
 SELECT * 
