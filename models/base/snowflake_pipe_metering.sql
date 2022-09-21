@@ -6,12 +6,15 @@
 }}
 WITH base AS (
   SELECT
-    99999 AS pipe_id,
-    'SNOWPIPE' as pipe_name,
-    date_trunc(minute,start_time) AS START_TIME,
-    date_trunc(minute,end_time) as END_TIME,
-    sum(credits_used) AS CREDITS_USED
-	FROM {{ source('snowflake','pipe_usage_history') }}
+    env_id AS pipe_id,
+    env_name as pipe_env,
+    --pipe_name as pipe_name,
+    date_trunc(hour,start_time) AS START_TIME,
+    date_trunc(hour,start_time) +  INTERVAL '1 hour' - INTERVAL '1 second' as END_TIME,
+    sum(credits_used) AS CREDITS_USED,
+    sum(BYTES_INSERTED/1e+6) AS MB_INSERTED,
+    sum(FILES_INSERTED) AS FILES_INSERTED
+	FROM  {{ ref('snowflake_pipe_usage') }} --{{ source('snowflake','pipe_usage_history') }}
   {% if is_incremental() %}
   -- this filter will only be applied on an incremental run
   WHERE START_TIME >= (SELECT MAX(start_time)  FROM {{ this }})
@@ -21,8 +24,10 @@ WITH base AS (
 
 SELECT
   pipe_id,
-  pipe_name,
+  pipe_env,
   start_time,
   end_time,
-  credits_used
+  credits_used,
+  MB_INSERTED,
+  FILES_INSERTED
 FROM base

@@ -1,11 +1,21 @@
 WITH base AS (
 
-	SELECT *
+	SELECT
+    warehouse_id,
+    warehouse_name,
+    start_time,
+    end_time,
+    credits_used
 	FROM {{ ref('snowflake_warehouse_metering') }}
   
   UNION ALL
 
-	SELECT *
+	SELECT 
+  pipe_id,
+  pipe_env,
+  start_time,
+  end_time,
+  credits_used
 	FROM {{ ref('snowflake_pipe_metering') }}
 
 ), contract_rates AS (
