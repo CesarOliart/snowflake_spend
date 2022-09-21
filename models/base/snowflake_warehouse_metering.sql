@@ -11,8 +11,8 @@ WITH base AS (
   UNION ALL
 
 	SELECT
-  99999,
-  'SNOWPIPE',
+  pipe_id,
+  pipe_env,
   start_time,
   end_time,
   credits_used

@@ -14,3 +14,4 @@ sources:
       - name: query_history
       - name: warehouse_metering_history
       - name: pipe_usage_history
+      - name: pipes
